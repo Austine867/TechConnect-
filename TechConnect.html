@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechConnect</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a12;color:#f1f5f9;overflow-x:hidden}
+.boot{position:fixed;inset:0;background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s,visibility .4s}
+.boot.done{opacity:0;visibility:hidden;pointer-events:none}
+.boot h1{font-size:clamp(2rem,7vw,3.5rem);font-weight:800;color:#6366f1;animation:b .6s ease-in-out infinite alternate}
+.boot p{margin-top:.5rem;font-size:.75rem;color:#64748b;letter-spacing:.15em;text-transform:uppercase}
+.boot .bar{margin-top:1.5rem;width:160px;height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.boot .bar i{display:block;height:100%;width:0;background:#6366f1;border-radius:2px;animation:bl .8s ease-in-out forwards}
+@keyframes b{to{filter:brightness(1.4)}}
+@keyframes bl{to{width:100%}}
+.fall{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.fall span{position:absolute;top:-40px;color:#6366f1;opacity:.05;font-size:16px;animation:f linear infinite}
+@keyframes f{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.05}90%{opacity:.05}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.8rem 1rem;background:rgba(10,10,18,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center}
+.nav .logo{font-size:1.25rem;font-weight:800;color:#6366f1}
+.nav a{color:#94a3b8;text-decoration:none;font-size:.78rem;font-weight:500;margin-left:1rem}
+.nav .ai-lnk{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff!important;padding:.35rem .8rem;border-radius:8px}
+.nav .ham{display:none;background:none;border:none;color:#f1f5f9;font-size:1.3rem}
+.main{position:relative;z-index:1;padding-top:64px}
+.hero{text-align:center;padding:2.5rem 1rem 1.5rem}
+.hero h1{font-size:clamp(1.7rem,5vw,2.8rem);font-weight:800;letter-spacing:-.03em}
+.hero h1 span{color:#6366f1}
+.hero p{color:#94a3b8;font-size:.9rem;max-width:440px;margin:.6rem auto 1.2rem;line-height:1.5}
+.srch{max-width:480px;margin:0 auto 1.2rem;position:relative}
+.srch input{width:100%;padding:.75rem 1rem .75rem 2.3rem;background:#141420;border:1px solid rgba(255,255,255,.04);border-radius:12px;color:#f1f5f9;font-size:.9rem;outline:none}
+.srch input:focus{border-color:#6366f1;box-shadow:0 0 0 2px rgba(99,102,241,.2)}
+.srch input::placeholder{color:#64748b}
+.srch .icon{position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:#64748b;font-size:.9rem}
+.sec{padding:1.2rem 1rem;max-width:1000px;margin:0 auto}
+.sec h2{font-size:1.2rem;font-weight:700;margin-bottom:.25rem}
+.sec .sub{color:#94a3b8;font-size:.82rem;margin-bottom:1rem}
+.ai-box{background:linear-gradient(135deg,rgba(99,102,241,.05),rgba(139,92,246,.02));border:1px solid rgba(99,102,241,.1);border-radius:16px;padding:1.1rem}
+.ai-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.ai-head .av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.ai-head .tit{font-weight:700;font-size:.95rem}
+.ai-head .st{font-size:.68rem;color:#22c55e;display:flex;align-items:center;gap:.25rem;margin-top:.1rem}
+.ai-head .st i{width:5px;height:5px;background:#22c55e;border-radius:50%;animation:p 2s infinite}
+@keyframes p{50%{opacity:.3}}
+.ai-body{color:#94a3b8;font-size:.85rem;line-height:1.5;margin-bottom:.6rem}
+.ai-in{display:flex;gap:.35rem}
+.ai-in input{flex:1;padding:.6rem .8rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:10px;color:#f1f5f9;font-size:.85rem;outline:none}
+.ai-in input:focus{border-color:#6366f1}
+.ai-in button{padding:.6rem .8rem;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;color:#fff;cursor:pointer;font-size:.85rem}
+.ai-r{margin-top:.6rem;padding:.75rem;background:rgba(255,255,255,.015);border-radius:10px;border-left:3px solid #6366f1;display:none;font-size:.82rem;line-height:1.5;color:#94a3b8}
+.ai-r.on{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.cmp{display:none;margin-bottom:1.2rem}
+.cmp.on{display:block}
+.cmp-tb{background:#141420;border:1px solid rgba(255,255,255,.04);border-radius:14px;overflow-x:auto}
+.cmp-tb table{width:100%;border-collapse:collapse;min-width:380px}
+.cmp-tb th,.cmp-tb td{padding:.6rem .85rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem}
+.cmp-tb th{background:rgba(255,255,255,.01);color:#94a3b8;font-weight:600}
+.cmp-tb tr:last-child td{border-bottom:none}
+.cmp-hd{display:flex;align-items:center;gap:.4rem}
+.cmp-hd .e{font-size:1.2rem}
+.cmp-hd .n{font-weight:600}
+.cmp-act{margin-top:.6rem}
+.cmp-act button{padding:.45rem .9rem;background:rgba(255,255,255,.03);color:#94a3b8;border:1px solid rgba(255,255,255,.04);border-radius:10px;font-size:.78rem;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.9rem}
+.card{background:#141420;border:1px solid rgba(255,255,255,.04);border-radius:14px;overflow:hidden;transition:all .15s}
+.card:hover{transform:translateY(-2px);border-color:#6366f1;box-shadow:0 4px 20px rgba(99,102,241,.12)}
+.card.hid{display:none}
+.card .img{width:100%;height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:#0a0a12}
+.card .info{padding:.9rem}
+.card .nm{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+.card .cond{display:inline-flex;align-items:center;gap:.2rem;padding:.2rem .5rem;border-radius:14px;font-size:.68rem;font-weight:600;margin-bottom:.5rem}
+.c-ln{background:rgba(34,197,94,.1);color:#22c55e}
+.c-ex{background:rgba(99,102,241,.1);color:#818cf8}
+.c-gd{background:rgba(245,158,11,.1);color:#f59e0b}
+.card .pr{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.card .tags{display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.7rem}
+.card .tags span{background:rgba(255,255,255,.02);padding:.2rem .45rem;border-radius:5px;font-size:.65rem;color:#94a3b8}
+.card .acts{display:flex;gap:.35rem}
+.btn{flex:1;padding:.55rem 0;border:none;border-radius:10px;font-size:.78rem;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;transition:all .1s}
+.btn-p{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.btn-p:hover{box-shadow:0 3px 10px rgba(99,102,241,.2)}
+.btn-c{background:rgba(99,102,241,.06);color:#818cf8;border:1px solid rgba(99,102,241,.12)}
+.btn-c.on{background:#6366f1;color:#fff}
+.none{text-align:center;padding:2rem 1rem;color:#64748b;display:none}
+.none.on{display:block}
+.none .big{font-size:2rem;margin-bottom:.4rem;opacity:.4}
+.foot{text-align:center;padding:1.5rem 1rem;border-top:1px solid rgba(255,255,255,.04);margin-top:1.2rem}
+.foot .lg{font-size:1rem;font-weight:800;color:#6366f1;margin-bottom:.2rem}
+.foot .tx{color:#64748b;font-size:.75rem}
+.foot .wa{display:inline-flex;align-items:center;gap:.35rem;margin-top:.6rem;padding:.45rem .9rem;background:rgba(34,197,94,.06);color:#22c55e;border-radius:10px;text-decoration:none;font-size:.78rem;font-weight:600;border:1px solid rgba(34,197,94,.12)}
+@media(max-width:640px){.nav a{display:none}.nav .ham{display:block}.grid{grid-template-columns:1fr}.hero{padding:2rem 1rem 1.2rem}}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:#0a0a12}
+::-webkit-scrollbar-thumb{background:#6366f1;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="boot" id="boot"><h1>TechConnect</h1><p>Powering On</p><div class="bar"><i></i></div></div>
+<div class="fall" id="fall"></div>
+<nav class="nav"><div class="logo">TechConnect</div><div><a href="#cat">Catalog</a><a href="#cmp">Compare</a><a href="#ai" class="ai-lnk">AI</a></div><button class="ham" onclick="document.getElementById('cat').scrollIntoView({behavior:'smooth'})">☰</button></nav>
+<div class="main">
+<section class="hero"><h1>Find Your Perfect <span>Laptop</span></h1><p>Premium refurbished laptops at unbeatable prices.</p><div class="srch"><span class="icon">🔍</span><input type="text" id="q" placeholder="Search by name, brand, or specs..."></div></section>
+<section class="sec" id="ai"><h2>🤖 TechConnect AI</h2><p class="sub">Ask about laptop conditions, comparisons, and recommendations</p><div class="ai-box"><div class="ai-head"><div class="av">🤖</div><div><div class="tit">TechConnect AI</div><div class="st"><i></i> Online</div></div></div><div class="ai-body">Hi! I can help you understand laptop conditions, compare specs, and recommend the best laptop. What would you like to know?</div><div class="ai-in"><input type="text" id="aiQ" placeholder="e.g. What's Like New vs Good?"><button onclick="aiGo()">➤</button></div><div class="ai-r" id="aiR"></div></div></section>
+<section class="sec cmp" id="cmpSec"><h2>⚖️ Compare Laptops</h2><p class="sub">Side-by-side specs comparison</p><div class="cmp-tb"><table><thead><tr id="cmpH"><th>Feature</th></tr></thead><tbody id="cmpB"></tbody></table></div><div class="cmp-act"><button onclick="clrCmp()">Clear</button></div></section>
+<section class="sec" id="cat"><h2>💻 Laptop Catalog</h2><p class="sub">Click Order to buy via WhatsApp, or Compare to see specs side-by-side</p><div class="grid" id="grid"></div><div class="none" id="none"><div class="big">🔍</div><div>No laptops found.</div></div></section>
+<footer class="foot"><div class="lg">TechConnect</div><div class="tx">Premium Laptops · Quality Guaranteed</div><a href="https://wa.me/27719205239" class="wa" target="_blank">💬 Chat on WhatsApp</a></footer>
+</div>
+<script>
+const data=[
+{id:1,nm:"Dell XPS 13 9310",e:"💻",c:"Like New",cc:"c-ln",pr:"R8,499",sp:{cpu:"Intel i7-1165G7",ram:"16GB",ssd:"512GB",scr:"13.4" FHD+",bat:"10hrs",os:"Windows 11"}},
+{id:2,nm:"MacBook Air M2",e:"🍎",c:"Excellent",cc:"c-ex",pr:"R12,999",sp:{cpu:"Apple M2",ram:"8GB",ssd:"256GB",scr:"13.6" Retina",bat:"18hrs",os:"macOS"}},
+{id:3,nm:"HP EliteBook 840 G8",e:"💻",c:"Good",cc:"c-gd",pr:"R5,999",sp:{cpu:"Intel i5-1135G7",ram:"8GB",ssd:"256GB",scr:"14" FHD",bat:"8hrs",os:"Windows 11"}},
+{id:4,nm:"Lenovo ThinkPad X1",e:"💻",c:"Like New",cc:"c-ln",pr:"R9,499",sp:{cpu:"Intel i7-1185G7",ram:"16GB",ssd:"512GB",scr:"14" FHD",bat:"12hrs",os:"Windows 11"}},
+{id:5,nm:"ASUS ZenBook 14",e:"💻",c:"Excellent",cc:"c-ex",pr:"R7,299",sp:{cpu:"AMD Ryzen 7 5800U",ram:"16GB",ssd:"512GB",scr:"14" OLED",bat:"11hrs",os:"Windows 11"}},
+{id:6,nm:"Acer Swift 3",e:"💻",c:"Good",cc:"c-gd",pr:"R4,499",sp:{cpu:"Intel i5-1135G7",ram:"8GB",ssd:"256GB",scr:"14" FHD",bat:"9hrs",os:"Windows 11"}},
+{id:7,nm:"Surface Laptop 4",e:"🪟",c:"Like New",cc:"c-ln",pr:"R10,499",sp:{cpu:"Intel i7-1185G7",ram:"16GB",ssd:"512GB",scr:"13.5" PixelSense",bat:"13hrs",os:"Windows 11"}},
+{id:8,nm:"MacBook Pro 14 M1",e:"🍎",c:"Excellent",cc:"c-ex",pr:"R18,999",sp:{cpu:"Apple M1 Pro",ram:"16GB",ssd:"512GB",scr:"14.2" XDR",bat:"17hrs",os:"macOS"}}
+];
+setTimeout(()=>document.getElementById('boot').classList.add('done'),1200);
+const fall=document.getElementById('fall');
+for(let i=0;i<12;i++){let s=document.createElement('span');s.textContent=['💻','⌨️','📱'][i%3];s.style.left=Math.random()*100+'%';s.style.animationDuration=(Math.random()*6+10)+'s';s.style.animationDelay=(Math.random()*8)+'s';s.style.fontSize=(Math.random()*8+12)+'px';fall.appendChild(s);}
+let cmp=[];
+function render(f=''){const g=document.getElementById('grid'),n=document.getElementById('none');g.innerHTML='';const fil=data.filter(x=>x.nm.toLowerCase().includes(f.toLowerCase())||x.c.toLowerCase().includes(f.toLowerCase())||x.sp.cpu.toLowerCase().includes(f.toLowerCase()));n.className=fil.length?'none':'none on';fil.forEach(x=>{let sel=cmp.some(c=>c.id===x.id);g.innerHTML+=`<div class="card" data-id="${x.id}"><div class="img">${x.e}</div><div class="info"><div class="nm">${x.nm}</div><div class="cond ${x.cc}">${x.c==='Like New'?'✨':x.c==='Excellent'?'⭐':'✅'} ${x.c}</div><div class="pr">${x.pr}</div><div class="tags"><span>⚡ ${x.sp.cpu}</span><span>🧠 ${x.sp.ram}</span><span>💾 ${x.sp.ssd}</span><span>📺 ${x.sp.scr}</span><span>🔋 ${x.sp.bat}</span><span>🖥️ ${x.sp.os}</span></div><div class="acts"><button class="btn btn-p" onclick="order(${x.id})">Order</button><button class="btn btn-c ${sel?'on':''}" onclick="togCmp(${x.id})" id="cb-${x.id}">${sel?'✓ Added':'Compare'}</button></div></div></div>`;});}
+render();
+document.getElementById('q').addEventListener('input',e=>render(e.target.value));
+function order(id){let x=data.find(l=>l.id===id);let msg=`Hi TechConnect! I'm interested in ordering:
+
+📱 *${x.nm}*
+💰 ${x.pr}
+✨ ${x.c}
+
+🖥️ Specs:
+• CPU: ${x.sp.cpu}
+• RAM: ${x.sp.ram}
+• Storage: ${x.sp.ssd}
+• Screen: ${x.sp.scr}
+• Battery: ${x.sp.bat}
+• OS: ${x.sp.os}
+
+Is it available?`;window.open(`https://wa.me/27719205239?text=${encodeURIComponent(msg)}`,'_blank');}
+function togCmp(id){let x=data.find(l=>l.id===id),i=cmp.findIndex(c=>c.id===id);if(i>-1)cmp.splice(i,1);else{if(cmp.length>=2){alert('Max 2 laptops');return;}cmp.push(x);}render(document.getElementById('q').value);updCmp();}
+function updCmp(){let sec=document.getElementById('cmpSec'),h=document.getElementById('cmpH'),b=document.getElementById('cmpB');if(cmp.length<2){sec.className='sec cmp';return;}sec.className='sec cmp on';h.innerHTML='<th>Feature</th>';cmp.forEach(x=>h.innerHTML+=`<th><div class="cmp-hd"><span class="e">${x.e}</span><span class="n">${x.nm}</span></div></th>`);let rows=[['Price','pr'],['Condition','c'],['CPU','cpu'],['RAM','ram'],['Storage','ssd'],['Screen','scr'],['Battery','bat'],['OS','os']];b.innerHTML='';rows.forEach(r=>{let html=`<td><strong>${r[0]}</strong></td>`;cmp.forEach(x=>html+=`<td>${r[0]==='Price'||r[0]==='Condition'?x[r[1]]:x.sp[r[1]]}</td>`);b.innerHTML+=`<tr>${html}</tr>`;});setTimeout(()=>sec.scrollIntoView({behavior:'smooth'}),50);}
+function clrCmp(){cmp=[];render(document.getElementById('q').value);updCmp();}
+function aiGo(){let q=document.getElementById('aiQ').value.trim().toLowerCase(),r=document.getElementById('aiR');if(!q)return;let a='';if(q.includes('condition')||q.includes('like new')||q.includes('good')||q.includes('excellent'))a='📋 <b>Conditions:</b><br><br>✨ <b>Like New</b> — Almost brand new, minimal wear, battery 90%+.<br>⭐ <b>Excellent</b> — Light use marks, battery 80%+, great value.<br>✅ <b>Good</b> — Visible light wear, fully functional, best budget option.';else if(q.includes('compare')||q.includes('difference')||q.includes('vs'))a='⚖️ <b>How to Compare:</b><br><br>1. Click "Compare" on any laptop card (max 2).<br>2. A side-by-side table appears above the catalog.<br>3. Compare CPU, RAM, Storage, Screen, Battery & OS.<br><br>💡 <b>Tip:</b> For coding/gaming, prioritize RAM (16GB+) and CPU.';else if(q.includes('recommend')||q.includes('best')||q.includes('which'))a='🎯 <b>Top Picks:</b><br><br>💼 <b>Business:</b> Dell XPS 13 or Lenovo ThinkPad — reliable, great battery.<br>🎨 <b>Creatives:</b> MacBook Air M2 or MacBook Pro 14 — powerful chips, amazing displays.<br>💰 <b>Budget:</b> Acer Swift 3 or HP EliteBook — solid performance, great prices.<br>🎮 <b>Power Users:</b> ASUS ZenBook 14 (OLED) or MacBook Pro 14 — best specs.';else if(q.includes('order')||q.includes('buy')||q.includes('whatsapp'))a='📲 <b>How to Order:</b><br><br>1. Find your laptop in the catalog.<br>2. Click the green <b>"Order"</b> button.<br>3. WhatsApp opens with a pre-filled message.<br>4. Send it — we'll confirm availability & arrange delivery!<br><br>💬 Or message us directly: +27 71 920 5239';else if(q.includes('delivery')||q.includes('shipping')||q.includes('warranty'))a='📦 <b>Delivery & Warranty:</b><br><br>🚚 <b>Delivery:</b> Nationwide across SA. Courier fees vary by location.<br>🛡️ <b>Warranty:</b> 3-month warranty on hardware defects.<br>↩️ <b>Returns:</b> 7-day return if condition doesn't match description.';else a='🤖 <b>TechConnect AI:</b><br><br>I can help with:<br>• 📋 Laptop conditions explained<br>• ⚖️ How to compare laptops<br>• 🎯 Personalized recommendations<br>• 📲 How to order via WhatsApp<br>• 📦 Delivery & warranty info<br><br>Try: "What's the difference between conditions?" or "Best laptop for students?"';r.innerHTML=a;r.className='ai-r on';document.getElementById('aiQ').value='';}
+document.getElementById('aiQ').addEventListener('keypress',e=>{if(e.key==='Enter')aiGo()});
+</script>
+</body>
+</html>
